@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="text-align: center; padding: 50px;">
+        <h2>Welcome to Your Food Planner!</h2>
+        <p>Plan your meals and track your calories.</p>
+        <div style="margin-bottom: 30px;">
+            <h3>Food Overview</h3>
+            <a href="{% url 'food_overview' %}">View/Add Pending & Cooked Food</a>
+        </div>
+        <div>
+            <h3>Food List</h3>
+            <a href="{% url 'food_list' %}">View Food List</a> |
+            <a href="{% url 'add_food' %}">Add New Food</a>
+        </div>
+        <div>
+            <h3>Ingredients</h3>
+            <a href="{% url 'ingredients_book' %}">View Ingredients</a>
+        </div>
+        <div>
+            <h3>Inventory</h3>
+            <a href="{% url 'inventory_list' %}">View Inventory</a> |
+            <a href="{% url 'reorder_list' %}">Reorder</a>
+        </div>
+    </div>
+{% endblock %}

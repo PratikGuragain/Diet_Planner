@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Food List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Calories</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for food in foods %}
+                <tr>
+                    <td>{{ food.name }}</td>
+                    <td>{{ food.calorie_count }}</td>
+                    <td>
+                        {% if food.image %}
+                            <img src="{{ food.image.url }}" alt="{{ food.name }}">
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'delete_food' food.id %}">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'add_food' %}">Add Food</a>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Mark Food as Cooked</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="cooked_time">Cooked Time (YYYY-MM-DD HH:MM):</label>
+        <input type="datetime-local" name="cooked_time" id="cooked_time" required><br><br>
+        <button type="submit">Submit</button>
+        <a href="{% url 'food_overview' %}">Cancel</a>
+    </form>
+    {% if error_message and pending_food_id == pending_food.food.pk %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+{% endblock %}

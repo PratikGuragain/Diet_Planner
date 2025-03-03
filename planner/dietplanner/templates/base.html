@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Planner</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #3498db;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #2980b9;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 5px;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .food-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .food-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .food-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .food-item h2 {
+            margin-bottom: 10px;
+        }
+
+        .food-item img {
+            max-width: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Food Planner</h1>
+        </header>
+        <nav>
+            <a href="{% url 'food_list' %}">View Foods</a>
+            <a href="{% url 'add_food' %}">Add Food</a>
+            <a href="{% url 'food_overview' %}">Food Overview</a>
+            <a href="{% url 'ingredients_book' %}">Ingredients</a>
+            <a href="{% url 'inventory_list' %}">Inventory</a>
+            <a href="{% url 'reorder_list' %}">Reorder</a>
+        </nav>
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+        &copy; 2023 Your Food Planner
+    </footer>
+</body>
+</html>

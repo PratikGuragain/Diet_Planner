@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Food Overview</h1>
+    {% if error_message %}<p style="color: red;">{{ error_message }}</p>{% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Food Name" required><br>
+        <input type="number" name="calorie_count" placeholder="Calories" required><br>
+        <input type="file" name="image"><br>
+        <label for="ready_time">Ready Time (HH:MM):</label>
+        <input type="text" name="ready_time" placeholder="HH:MM AM/PM">
+        <label for="ingredients">Ingredients (Name:Quantity Unit, separated by commas):</label>
+        <input type="text" name="ingredients" id="ingredients"><br>
+        <button type="submit">Add Pending Food</button>
+    </form>
+    <h2>Pending Food</h2>
+    <ul>
+        {% for food in pending_foods %}
+            {% if not food.cooked_time %}
+                <li>
+                    {{ food.food.name }} - Ready: {{ food.ready_time }}
+                    <form method="post" action="{% url 'cooked_food' food.food.pk %}" style="display: inline;">
+                        {% csrf_token %}
+                        <label for="cooked_time_{{ food.food.pk }}">Cooked Time (YYYY-MM-DD HH:MM):</label>
+                        <input type="datetime-local" name="cooked_time" id="cooked_time_{{ food.food.pk }}" required>
+                        <button type="submit">Mark as Cooked</button>
+                    </form> | <a href="{% url 'delete_pending_food' food.food.pk %}">Delete</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <h2>Completed Food</h2>
+    <ul>
+        {% for food in pending_foods %}
+            {% if food.cooked_time %}
+                <li>
+                    {{ food.food.name }} - Ready: {{ food.ready_time }} - Cooked: {{ food.cooked_time }} |
+                    <a href="{% url 'delete_pending_food' food.food.pk %}">Delete</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

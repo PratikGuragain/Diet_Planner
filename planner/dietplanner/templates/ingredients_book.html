@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Ingredients Book</h1>
+    <ul>
+        {% for food in foods %}
+            <li>
+                {{ food.name }} - Ingredients:
+                <ul>
+                    {% for ingredient in food.ingredients.all %}
+                        <li>
+                            <a href="https://www.swiggy.com/instamart/search?custom_back=true&query={{ ingredient.name|urlencode }}">
+                                {{ ingredient.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

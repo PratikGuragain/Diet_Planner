@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Reorder List</h1>
+    {% if reorder_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Ingredient Name</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Minimum Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in reorder_items %}
+                    <tr>
+                        <td>
+                            <a href="https://www.swiggy.com/instamart/search?custom_back=true&query={{ item.ingredient.name|urlencode }}" target="_blank">
+                                {{ item.ingredient.name }}
+                            </a>
+                        </td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.unit }}</td>
+                        <td>{{ item.minimum_quantity }}</td>
+                        <td>
+                            <form method="post" action="{% url 'delete_inventory_item' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No ingredients need reordering.</p>
+    {% endif %}
+{% endblock %}

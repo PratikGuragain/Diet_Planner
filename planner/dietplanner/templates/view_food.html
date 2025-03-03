@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Food Details</h2>
+    <div class="food-list">
+        {% for food in foods %}
+            <div class="food-item">
+                <h2>{{ food.name }}</h2>
+                <p>Calories: {{ food.calorie_count }}</p>
+                {% if food.image %}
+                    <img src="{{ food.image.url }}" alt="{{ food.name }}">
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

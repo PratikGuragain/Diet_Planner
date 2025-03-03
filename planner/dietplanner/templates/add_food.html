@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Add Food</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required><br><br>
+        <label for="calorie_count">Calorie Count:</label>
+        <input type="number" name="calorie_count" id="calorie_count" required><br><br>
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image"><br><br>
+        <label for="ingredients">Ingredients (Name:Quantity Unit, separated by commas):</label>
+        <input type="text" name="ingredients" id="ingredients" placeholder="e.g., chicken:200 grams, rice:1 cup"><br><br>
+        <button type="submit">Add Food</button>
+    </form>
+{% endblock %}
