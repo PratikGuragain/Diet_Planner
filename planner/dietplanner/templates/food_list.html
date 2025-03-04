@@ -1,29 +1,148 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h2>Food List</h2>
-    <table>
-        <thead>
+<style>
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #d1f2eb);
+  }
+
+  .container {
+    background-color: #f8f8f8; 
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .card {
+    border: none; 
+    box-shadow: none; 
+    background-color: transparent; 
+    margin-top: 20px;
+  }
+
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .card-body {
+    padding: 30px;
+    background-color: #fff; 
+    border-radius: 0 0 10px 10px; 
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    color: #212529; 
+  }
+
+  .table th,
+  .table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  .table th {
+    background-color: #f5f5f5; 
+    font-weight: 600;
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; 
+  }
+
+  .table tbody tr:hover {
+    background-color: #f0f0f0; 
+  }
+
+  .table img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 5px;
+  }
+
+  .btn-outline-danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+
+  .btn-primary {
+    background-color: #89CFF0; /* Light blue color */
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .btn-primary:hover {
+    background-color: #6EB5E4; /* Slightly darker shade on hover */
+  }
+
+  h2 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Food List</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
             <tr>
-                <th>Name</th>
-                <th>Calories</th>
-                <th>Image</th>
-                <th>Actions</th>
+              <th>Name</th>
+              <th>Calories</th>
+              <th>Image</th>
+              <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for food in foods %}
-                <tr>
-                    <td>{{ food.name }}</td>
-                    <td>{{ food.calorie_count }}</td>
-                    <td>
-                        {% if food.image %}
-                            <img src="{{ food.image.url }}" alt="{{ food.name }}">
-                        {% endif %}
-                    </td>
-                    <td><a href="{% url 'delete_food' food.id %}">Delete</a></td>
-                </tr>
+            <tr>
+              <td>{{ food.name }}</td>
+              <td>{{ food.calorie_count }}</td>
+              <td>
+                {% if food.image %}
+                <img src="{{ food.image.url }}" alt="{{ food.name }}" class="img-thumbnail" style="max-width: 100px;">
+                {% endif %}
+              </td>
+              <td>
+                <form method="post" action="{% url 'delete_food' food.id %}" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm">X</button>
+                </form>
+              </td>
+            </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'add_food' %}">Add Food</a>
+          </tbody>
+        </table>
+      </div>
+      <a href="{% url 'add_food' %}" class="btn btn-primary">Add Food</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

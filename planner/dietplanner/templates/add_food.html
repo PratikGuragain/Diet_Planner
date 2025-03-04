@@ -1,16 +1,78 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h2>Add Food</h2>
-    <form method="post" enctype="multipart/form-data">
+<style>
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    background-color: #f8f8f8; /* Soft background for the container */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .card {
+    border: none; /* Remove default card border */
+    box-shadow: none; /* Remove default card shadow */
+  }
+
+  .card-header {
+    background-color: #f8f9fa; /* Light background for header */
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  /* Form Styling */
+  .form-label {
+    font-weight: 600;
+  }
+
+  .btn-success {
+    background-color: #89CFF0; /* Light blue color */
+    color: #fff; /* White text color for contrast */
+    border: none;
+  }
+
+  .btn-success:hover {
+    background-color: #6EB5E4; /* Slightly darker shade on hover */
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Add Food</h2>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" required><br><br>
-        <label for="calorie_count">Calorie Count:</label>
-        <input type="number" name="calorie_count" id="calorie_count" required><br><br>
-        <label for="image">Image:</label>
-        <input type="file" name="image" id="image"><br><br>
-        <label for="ingredients">Ingredients (Name:Quantity Unit, separated by commas):</label>
-        <input type="text" name="ingredients" id="ingredients" placeholder="e.g., chicken:200 grams, rice:1 cup"><br><br>
-        <button type="submit">Add Food</button>
-    </form>
+        <div class="mb-3">
+          <label for="name" class="form-label">Name:</label>
+          <input type="text" name="name" id="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="calorie_count" class="form-label">Calorie Count:</label>
+          <input type="number" name="calorie_count" id="calorie_count" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Image:</label>
+          <input type="file" name="image" id="image" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label for="ingredients" class="form-label">Ingredients (Name:Quantity Unit, separated by commas):</label>
+          <input type="text" name="ingredients" id="ingredients" class="form-control" placeholder="e.g., chicken:200 grams, rice:1 cup">
+        </div>
+        <button type="submit" class="btn btn-success">Add Food</button>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

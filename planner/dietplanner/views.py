@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Food, PendingFood, Ingredient, Inventory
 from datetime import time, datetime
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.db.models import F
 from django.utils import timezone
 from decimal import Decimal
@@ -66,13 +66,20 @@ def food_overview(request):
             ingredients = Ingredient.objects.filter(food=food)
             ingredient_list = "\n".join([f"- {ing.name}: {ing.quantity} {ing.unit}" for ing in ingredients])
             message = f"Please prepare {food.name} by {ready_time_obj.strftime('%I:%M %p')}.\nIngredients:\n{ingredient_list}"
-            send_mail(
-                'Cooking Instructions',
-                message,
-                'guragainpratik8@gmail.com',  # Replace with your actual "from" email
-                ['guragainpratik0@gmail.com'],  # Replace with the cook's email
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    'Cooking Instructions',
+                    message,
+                    'guragainpratik8@gmail.com',  # Replace with your actual "from" email
+                    ['guragainpratik0@gmail.com'],  # Replace with the cook's email
+                    fail_silently=False,
+                )
+            except BadHeaderError:
+                print("invalid header found.")
+            except OSError as e:
+                print(f"Error sending email: {e}")
+                # Optionally, display a message to the user
+                # messages.error(request, "Failed to send email. Please try again later.")
 
             return redirect('food_overview')
         except ValueError as e:

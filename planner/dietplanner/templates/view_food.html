@@ -1,16 +1,74 @@
 {% extends 'base.html' %}
-{% block content %}
-    <h2>Food Details</h2>
-    <div class="food-list">
-        {% for food in foods %}
-            <div class="food-item">
-                <h2>{{ food.name }}</h2>
-                <p>Calories: {{ food.calorie_count }}</p>
-                {% if food.image %}
-                    <img src="{{ food.image.url }}" alt="{{ food.name }}">
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-{% endblock %}
 
+{% block content %}
+<style>
+  /* Google Fonts - You no longer need @import here */
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #c2e9fb);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('https://subtlepatterns.com/patterns/light_wool.png'); /* Background pattern */
+  }
+
+  .food-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+    gap: 20px;
+  }
+
+  .food-item {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+    text-align: center; /* Center content */
+  }
+
+  .food-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .food-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .food-item h2 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-family: 'Lobster', cursive; /* Use Lobster font for food names */
+  }
+
+  .food-item p {
+    margin-bottom: 15px;
+  }
+
+  h2.food-details-heading { /* Style for the main heading */
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-family: 'Lobster', cursive;
+    text-align: center;
+  }
+</style>
+
+<h2 class="food-details-heading">Food Details</h2>
+<div class="food-list">
+  {% for food in foods %}
+  <div class="food-item">
+    {% if food.image %}
+    <img src="{{ food.image.url }}" alt="{{ food.name }}">
+    {% endif %}
+    <h2>{{ food.name }}</h2>
+    <p>Calories: {{ food.calorie_count }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

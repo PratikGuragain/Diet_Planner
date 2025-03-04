@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-^%y7-7stehyn)6a&%ryd&_hcdc95$6xm(6we$-fvcbq37m+9xd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pratikguragain.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['PratikGuragain.pythonanywhere.com']
 
 # Application definition
 
@@ -124,9 +123,9 @@ EMAIL_HOST_PASSWORD = 'fkka zrdb kidr ltxk' # Generate an app password from your
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/static/'  # Corrected STATIC_URL
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'dietplanner/static'),  # Replace 'your_app' with your app's name
+   os.path.join(BASE_DIR, 'food_images'), # Corrected path
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -135,5 +134,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'food_images')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'food_images')
 MEDIA_URL = '/food_images/'

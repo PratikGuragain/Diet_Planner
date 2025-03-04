@@ -1,43 +1,234 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h1>Food Overview</h1>
-    {% if error_message %}<p style="color: red;">{{ error_message }}</p>{% endif %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" name="name" placeholder="Food Name" required><br>
-        <input type="number" name="calorie_count" placeholder="Calories" required><br>
-        <input type="file" name="image"><br>
-        <label for="ready_time">Ready Time (HH:MM):</label>
-        <input type="text" name="ready_time" placeholder="HH:MM AM/PM">
-        <label for="ingredients">Ingredients (Name:Quantity Unit, separated by commas):</label>
-        <input type="text" name="ingredients" id="ingredients"><br>
-        <button type="submit">Add Pending Food</button>
-    </form>
-    <h2>Pending Food</h2>
-    <ul>
-        {% for food in pending_foods %}
+<style>
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    background-color: #f8f8f8; /* Soft background for the container */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .card {
+    border: none; /* Remove default card border */
+    box-shadow: none; /* Remove default card shadow */
+  }
+
+  .card-header {
+    background-color: #f8f9fa; /* Light background for header */
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .dropdown-toggle {
+    background-color: #8ab4f8; /* Softer blue */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+
+  .dropdown-toggle:hover {
+    background-color: #6a96e8; /* Darker on hover */
+  }
+
+  .dropdown-menu {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .dropdown-item {
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+
+  h1 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .btn-primary {
+    background-color: #8ab4f8; /* Softer blue */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    background-color: #6a96e8; /* Darker on hover */
+  }
+
+  .btn-success {
+    background-color: #28a745; /* Vibrant green for Mark as Cooked */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 600;
+  }
+
+  .btn-success:hover {
+    background-color: #218838; /* Slightly darker green on hover */
+  }
+
+  .btn-outline-danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+</style>
+
+<div class="container mt-4">
+
+  {% if error_message %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ error_message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endif %}
+
+  {% if success_message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ success_message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endif %}
+
+  <div class="mb-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFoodModal">
+      Add Pending Food
+    </button>
+  </div>
+
+  <div class="modal fade" id="addFoodModal" tabindex="-1" aria-labelledby="addFoodModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addFoodModalLabel">Add Pending Food</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="name" class="form-label">Food Name:</label>
+              <input type="text" class="form-control" name="name" placeholder="Food Name" required>
+            </div>
+            <div class="mb-3">
+              <label for="calorie_count" class="form-label">Calories:</label>
+              <input type="number" class="form-control" name="calorie_count" placeholder="Calories" required>
+            </div>
+            <div class="mb-3">
+              <label for="image" class="form-label">Image:</label>
+              <input type="file" class="form-control" name="image">
+            </div>
+            <div class="mb-3">
+              <label for="ready_time" class="form-label">Ready Time (HH:MM AM/PM):</label>
+              <input type="text" class="form-control" name="ready_time" placeholder="HH:MM AM/PM">
+            </div>
+            <div class="mb-3">
+              <label for="ingredients" class="form-label">Ingredients (Name:Quantity Unit(Negative), separated by commas):</label>
+              <input type="text" class="form-control" name="ingredients" id="ingredients">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Add Pending Food</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="pendingFoodDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          Pending Food
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="pendingFoodDropdown">
+          {% for food in pending_foods %}
             {% if not food.cooked_time %}
-                <li>
-                    {{ food.food.name }} - Ready: {{ food.ready_time }}
+              <li>
+                <div class="dropdown-item card-body">
+                  {{ food.food.name }} - Ready: {{ food.ready_time }}
+                  <div class="d-flex justify-content-end">
                     <form method="post" action="{% url 'cooked_food' food.food.pk %}" style="display: inline;">
-                        {% csrf_token %}
-                        <label for="cooked_time_{{ food.food.pk }}">Cooked Time (YYYY-MM-DD HH:MM):</label>
-                        <input type="datetime-local" name="cooked_time" id="cooked_time_{{ food.food.pk }}" required>
-                        <button type="submit">Mark as Cooked</button>
-                    </form> | <a href="{% url 'delete_pending_food' food.food.pk %}">Delete</a>
-                </li>
+                      {% csrf_token %}
+                      <label for="cooked_time_{{ food.food.pk }}" class="form-label visually-hidden">Cooked Time (YYYY-MM-DD HH:MM):</label>
+                      <input type="datetime-local" name="cooked_time" id="cooked_time_{{ food.food.pk }}" required>
+                      <button type="submit" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark this food as cooked">Mark as Cooked</button>
+                    </form>
+                    <form method="post" action="{% url 'delete_pending_food' food.food.pk %}" style="display: inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-danger btn-sm ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete this pending food">X</button>
+                    </form>
+                  </div>
+                </div>
+              </li>
             {% endif %}
-        {% endfor %}
-    </ul>
-    <h2>Completed Food</h2>
-    <ul>
-        {% for food in pending_foods %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="completedFoodDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          Completed Food
+        </button>
+        <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="completedFoodDropdown">
+          {% for food in pending_foods %}
             {% if food.cooked_time %}
-                <li>
-                    {{ food.food.name }} - Ready: {{ food.ready_time }} - Cooked: {{ food.cooked_time }} |
-                    <a href="{% url 'delete_pending_food' food.food.pk %}">Delete</a>
-                </li>
+              <li>
+                <div class="dropdown-item card-body">
+                  {{ food.food.name }} - Ready: {{ food.ready_time }} - Cooked: {{ food.cooked_time }}
+                  <div class="d-flex justify-content-end">
+                    <form method="post" action="{% url 'delete_pending_food' food.food.pk %}" style="display: inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-danger btn-sm ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete this pending food">X</button>
+                    </form>
+                  </div>
+                </div>
+              </li>
             {% endif %}
-        {% endfor %}
-    </ul>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Enable tooltips
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 {% endblock %}

@@ -1,20 +1,90 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h1>Ingredients Book</h1>
-    <ul>
-        {% for food in foods %}
-            <li>
-                {{ food.name }} - Ingredients:
-                <ul>
-                    {% for ingredient in food.ingredients.all %}
-                        <li>
-                            <a href="https://www.swiggy.com/instamart/search?custom_back=true&query={{ ingredient.name|urlencode }}">
-                                {{ ingredient.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
+<style>
+  body {
+    background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    background-color: #f8f8f8; /* Soft background for the container */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .card {
+    border: none; /* Remove default card border */
+    box-shadow: none; /* Remove default card shadow */
+  }
+
+  .card-header {
+    background-color: #f8f9fa; /* Light background for header */
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .food-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .food-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .food-item h2 {
+    margin-bottom: 10px;
+  }
+
+  .ingredient-badge {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: #8ab4f8; /* Softer blue for badges */
+    color: white; /* White text for better contrast */
+  }
+
+  h1 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h1>Ingredients Book</h1>
+    </div>
+    <div class="card-body">
+      {% for food in foods %}
+      <div class="food-item">
+        <h2>{{ food.name }}</h2>
+        {% if food.ingredients.all %}
+        <div>
+          {% for ingredient in food.ingredients.all %}
+          <a href="https://www.swiggy.com/instamart/search?custom_back=true&query={{ ingredient.name|urlencode }}" target="_blank">
+            <span class="badge ingredient-badge">{{ ingredient.name }}</span>
+          </a>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p>No ingredients listed.</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}
