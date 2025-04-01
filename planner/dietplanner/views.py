@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .models import Food, PendingFood, Ingredient, Inventory
 from datetime import time, datetime
 from django.core.mail import send_mail, BadHeaderError
@@ -6,6 +6,12 @@ from django.db.models import F
 from django.utils import timezone
 from decimal import Decimal
 import re
+from settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+from twilio.rest import Client 
+
+account_sid = "AC9a1ec0e1ceb7088ab9e4b938f4807585"
+auth_token = "8ed9810e87cf83ade5e214da3c4839a8"
+client = Client(account_sid, auth_token)
 
 def home(request):
     return render(request, 'home.html')
@@ -13,12 +19,13 @@ def home(request):
 def food_overview(request):
     pending_foods = PendingFood.objects.all()
 
-    if request.method == 'POST': 
+    if request.method == 'POST':
         name = request.POST.get('name')
         calorie_count = request.POST.get('calorie_count')
         image = request.FILES.get('image')
         ready_time_str = request.POST.get('ready_time')
         ingredients_str = request.POST.get('ingredients')
+        user_whatsapp_number = request.POST.get('user_number')  # Get user's WhatsApp number
 
         try:
             ready_time_obj = datetime.strptime(ready_time_str, '%I:%M %p').time()
@@ -38,48 +45,40 @@ def food_overview(request):
                     if len(parts) > 1:
                         quantity_unit = parts[1].strip()
                         try:
-                        # Use regular expression to find numbers (including negative)
                             quantity_str = re.search(r'^-?\d+(\.\d+)?', quantity_unit).group(0)
                             quantity = float(quantity_str)
-                            # Extract the unit (alphabetic characters)
                             unit_str = ''.join(filter(str.isalpha, quantity_unit.replace(quantity_str, '')))
                             if unit_str:
                                 unit = unit_str
-                        except (ValueError, AttributeError):  # Handle cases where parsing fails
+                        except (ValueError, AttributeError):
                             quantity = 1.0
                             unit = 'grams'
                     ingredient = Ingredient.objects.create(food=food, name=ingredient_name, quantity=quantity, unit=unit)
 
-                    # Add or update inventory
                     try:
                         inventory_item = Inventory.objects.get(ingredient__name=ingredient.name)
                         inventory_item.quantity += Decimal(ingredient.quantity)
                         inventory_item.save()
                     except Inventory.DoesNotExist:
-                        # Create new inventory item, if quantity < 0, set minimum_quantity to 1 to force reorder.
                         if Decimal(ingredient.quantity) < 0:
                             Inventory.objects.create(ingredient=ingredient, quantity=Decimal(ingredient.quantity), unit=ingredient.unit, minimum_quantity=1)
                         else:
                             Inventory.objects.create(ingredient=ingredient, quantity=Decimal(ingredient.quantity), unit=ingredient.unit, minimum_quantity=0)
 
-            # Send email to cook when pending food is added
+            # Send WhatsApp message to cook
             ingredients = Ingredient.objects.filter(food=food)
             ingredient_list = "\n".join([f"- {ing.name}: {ing.quantity} {ing.unit}" for ing in ingredients])
-            message = f"Please prepare {food.name} by {ready_time_obj.strftime('%I:%M %p')}.\nIngredients:\n{ingredient_list}"
+            message_body = f"Please prepare {food.name} by {ready_time_obj.strftime('%I:%M %p')}.\nIngredients:\n{ingredient_list}"
+
             try:
-                send_mail(
-                    'Cooking Instructions',
-                    message,
-                    'guragainpratik8@gmail.com',  # Replace with your actual "from" email
-                    ['guragainpratik0@gmail.com'],  # Replace with the cook's email
-                    fail_silently=False,
+                message = client.messages.create(
+                    from_='whatsapp:+14155238886',  # Twilio Sandbox Number
+                    body=message_body,
+                    to='whatsapp:+{}'.format(user_whatsapp_number)  # Cook's WhatsApp number
                 )
-            except BadHeaderError:
-                print("invalid header found.")
-            except OSError as e:
-                print(f"Error sending email: {e}")
-                # Optionally, display a message to the user
-                # messages.error(request, "Failed to send email. Please try again later.")
+                print(f"WhatsApp message sent: {message.sid}")
+            except Exception as e:
+                print(f"Error sending WhatsApp message: {e}")
 
             return redirect('food_overview')
         except ValueError as e:
@@ -128,6 +127,7 @@ def delete_pending_food(request, id):
 
 def food_list(request):
     foods = Food.objects.all()
+    print(foods)
     return render(request, 'food_list.html', {'foods': foods})
 
 def add_food(request):

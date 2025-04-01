@@ -3,24 +3,24 @@
 {% block content %}
 <style>
   body {
-    background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
+    background: linear-gradient(135deg, #e0f7fa, #d1f2eb);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   .container {
-    background-color: #f8f8f8; /* Soft background for the container */
+    background-color: #f8f8f8;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
   .card {
-    border: none; /* Remove default card border */
-    box-shadow: none; /* Remove default card shadow */
+    border: none;
+    box-shadow: none;
   }
 
   .card-header {
-    background-color: #f8f9fa; /* Light background for header */
+    background-color: #f8f9fa;
     border-bottom: 1px solid #eee;
     padding: 15px;
     border-radius: 10px 10px 0 0;
@@ -32,7 +32,7 @@
   }
 
   .dropdown-toggle {
-    background-color: #8ab4f8; /* Softer blue */
+    background-color: #8ab4f8;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -42,7 +42,7 @@
   }
 
   .dropdown-toggle:hover {
-    background-color: #6a96e8; /* Darker on hover */
+    background-color: #6a96e8;
   }
 
   .dropdown-menu {
@@ -69,7 +69,7 @@
   }
 
   .btn-primary {
-    background-color: #8ab4f8; /* Softer blue */
+    background-color: #8ab4f8;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -77,11 +77,11 @@
   }
 
   .btn-primary:hover {
-    background-color: #6a96e8; /* Darker on hover */
+    background-color: #6a96e8;
   }
 
   .btn-success {
-    background-color: #28a745; /* Vibrant green for Mark as Cooked */
+    background-color: #28a745;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -89,7 +89,7 @@
   }
 
   .btn-success:hover {
-    background-color: #218838; /* Slightly darker green on hover */
+    background-color: #218838;
   }
 
   .btn-outline-danger {
@@ -154,6 +154,10 @@
             <div class="mb-3">
               <label for="ingredients" class="form-label">Ingredients (Name:Quantity Unit(Negative), separated by commas):</label>
               <input type="text" class="form-control" name="ingredients" id="ingredients">
+            </div>
+            <div class="mb-3">
+              <label for="user_number" class="form-label">Cook's WhatsApp Number (with country code):</label>
+              <input type="text" class="form-control" name="user_number" placeholder="+918105378319" required>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -227,7 +231,6 @@
 </div>
 
 <script>
-  // Enable tooltips
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
