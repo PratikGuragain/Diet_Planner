@@ -2,35 +2,88 @@
 
 {% block content %}
 <style>
-  /* Google Fonts - You no longer need @import here */
-
   body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #e0f7fa, #c2e9fb);
     background-size: cover;
     background-repeat: no-repeat;
     background-image: url('https://subtlepatterns.com/patterns/light_wool.png'); /* Background pattern */
+    overflow: hidden; /* Prevent scrollbars during initial animation */
   }
 
+  /* Page transition animation */
+  body.loading * {
+    opacity: 0;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transform: translateY(10px);
+  }
+
+  body:not(.loading) * {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  /* Food list - fade-in with a smooth delay */
   .food-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
     gap: 20px;
+    opacity: 0;
+    transform: translateY(20px); /* Slight translation to create a smooth entry effect */
+    animation: fadeInGrid 1s ease-out 0.3s forwards; /* Fade-in grid with smooth delay */
   }
 
+  @keyframes fadeInGrid {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Food item animation - smooth sliding with better visibility */
   .food-item {
     border: none;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
     background-color: #fff;
     text-align: center; /* Center content */
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideIn 0.8s ease-out forwards; /* Food item sliding in with better smoothness */
+    transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease; /* Smooth hover interactions */
   }
 
+  /* Slide-in effect for each food item with staggered delay */
+  .food-list .food-item:nth-child(1) { animation-delay: 0.5s; }
+  .food-list .food-item:nth-child(2) { animation-delay: 0.7s; }
+  .food-list .food-item:nth-child(3) { animation-delay: 0.9s; }
+  .food-list .food-item:nth-child(4) { animation-delay: 1.1s; }
+  .food-list .food-item:nth-child(5) { animation-delay: 1.3s; }
+  .food-list .food-item:nth-child(6) { animation-delay: 1.5s; }
+  /* Add more nth-child selectors as needed for more food items */
+
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hover animation - food item lifting with smooth shadow expansion */
   .food-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px); /* Subtle lift */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+    background-color: #f8f8f8; /* Slightly lighter background on hover */
   }
 
   .food-item img {
@@ -38,25 +91,71 @@
     height: 200px;
     object-fit: cover;
     display: block;
+    transition: transform 0.4s ease; /* Smoother zoom */
+  }
+
+  /* Smoother zoom effect when hovering over image */
+  .food-item img:hover {
+    transform: scale(1.05); /* More subtle zoom */
   }
 
   .food-item h2 {
     margin-top: 15px;
     margin-bottom: 10px;
     font-family: 'Lobster', cursive; /* Use Lobster font for food names */
+    transition: color 0.4s ease, background-color 0.4s ease; /* Smoother color transition on hover */
+    padding: 8px; /* Slightly more padding */
+    border-radius: 5px;
+    display: inline-block; /* To contain background color */
+  }
+
+  /* Change color of food name on hover */
+  .food-item h2:hover {
+    color: #e91e63; /* A different pink for variety */
+    background-color: #ffebee; /* Light background for food name */
   }
 
   .food-item p {
     margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: #666;
+    opacity: 0;
+    animation: fadeInText 1s ease-out 0.8s forwards; /* Smoother fade-in text with delay */
   }
 
-  h2.food-details-heading { /* Style for the main heading */
-    color: #333;
+  /* Fade-in effect for text */
+  @keyframes fadeInText {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  h2.food-details-heading {
+    color: #444;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-family: 'Lobster', cursive;
     text-align: center;
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: fadeInHeading 1.2s ease-out 0.1s forwards; /* Smoother heading fade-in */
   }
+
+  /* Heading fade-in animation */
+  @keyframes fadeInHeading {
+    0% {
+      opacity: 0;
+      transform: translateY(-15px); /* Starting with a slight offset */
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0); /* Ending at natural position */
+    }
+  }
+
 </style>
 
 <h2 class="food-details-heading">Food Details</h2>
@@ -71,4 +170,15 @@
   </div>
   {% endfor %}
 </div>
+
+<script>
+  // Add a class to the body to trigger initial fade-in animation
+  document.body.classList.add('loading');
+
+  window.addEventListener('load', () => {
+    document.body.classList.remove('loading');
+  });
+</script>
 {% endblock %}
+
+

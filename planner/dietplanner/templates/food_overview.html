@@ -5,6 +5,16 @@
   body {
     background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: fadeIn 1.5s ease-in-out; /* Smooth body fade-in */
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
   .container {
@@ -12,6 +22,18 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.8s ease-out;
+  }
+
+  @keyframes slideIn {
+    0% {
+      transform: translateY(-30px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
   .card {
@@ -25,10 +47,35 @@
     padding: 15px;
     border-radius: 10px 10px 0 0;
     position: relative;
+    animation: fadeUp 0.8s ease-out; /* Smooth animation for header */
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .card-body {
     padding: 20px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards; /* Smooth fade-in for the card body */
+  }
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .dropdown-toggle {
@@ -38,11 +85,12 @@
     padding: 10px 20px;
     color: #fff;
     font-weight: 600;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
   }
 
   .dropdown-toggle:hover {
     background-color: #6a96e8; /* Darker on hover */
+    transform: scale(1.05); /* Slight zoom-in effect */
   }
 
   .dropdown-menu {
@@ -51,11 +99,37 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-height: 300px;
     overflow-y: auto;
+    opacity: 0;
+    animation: fadeInDown 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .dropdown-item {
     padding: 10px 15px;
     transition: background-color 0.3s;
+    opacity: 0;
+    animation: fadeInItem 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeInItem {
+    0% {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .dropdown-item:hover {
@@ -66,6 +140,7 @@
     color: #333;
     font-weight: 700;
     margin-bottom: 20px;
+    animation: fadeIn 2s ease-in-out; /* Smooth header fade-in */
   }
 
   .btn-primary {
@@ -74,10 +149,12 @@
     border-radius: 5px;
     padding: 10px 20px;
     font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
   }
 
   .btn-primary:hover {
     background-color: #6a96e8; /* Darker on hover */
+    transform: scale(1.05);
   }
 
   .btn-success {
@@ -86,25 +163,40 @@
     border-radius: 5px;
     padding: 10px 20px;
     font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
   }
 
   .btn-success:hover {
     background-color: #218838; /* Slightly darker green on hover */
+    transform: scale(1.05);
   }
 
   .btn-outline-danger {
     border-color: #e74c3c;
     color: #e74c3c;
+    transition: background-color 0.3s;
   }
 
   .btn-outline-danger:hover {
     background-color: #e74c3c;
     color: #fff;
   }
+
+  .alert {
+    animation: fadeInAlert 1s ease-in-out; /* Smooth fade-in for alerts */
+  }
+
+  @keyframes fadeInAlert {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 </style>
 
 <div class="container mt-4">
-
   {% if error_message %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       {{ error_message }}
@@ -154,6 +246,10 @@
             <div class="mb-3">
               <label for="ingredients" class="form-label">Ingredients (Name:Quantity Unit(Negative), separated by commas):</label>
               <input type="text" class="form-control" name="ingredients" id="ingredients">
+            </div>
+            <div class="mb-3">
+              <label for="user_number" class="form-label">Cook's WhatsApp Number (with country code):</label>
+              <input type="text" class="form-control" name="user_number" placeholder="+918105378319" required>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

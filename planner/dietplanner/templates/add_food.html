@@ -5,6 +5,14 @@
   body {
     background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: backgroundAnimation 3s ease-in-out infinite; /* Background animation */
+  }
+
+  /* Animate background color change */
+  @keyframes backgroundAnimation {
+    0% { background: linear-gradient(135deg, #e0f7fa, #d1f2eb); }
+    50% { background: linear-gradient(135deg, #ffffff, #e0f7fa); }
+    100% { background: linear-gradient(135deg, #e0f7fa, #d1f2eb); }
   }
 
   .container {
@@ -12,11 +20,41 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 2s forwards, bounceIn 1.5s ease-out; /* Adjusted duration for smoother load */
+  }
+
+  /* Fade-in effect for container */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Bounce-in effect for the container */
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.5);
+    }
+    60% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
   .card {
-    border: none; /* Remove default card border */
-    box-shadow: none; /* Remove default card shadow */
+    border: none;
+    box-shadow: none;
+    transition: transform 0.3s ease; /* Smooth hover effect */
+  }
+
+  .card:hover {
+    transform: translateY(-10px); /* Slight lift on hover */
   }
 
   .card-header {
@@ -24,6 +62,11 @@
     border-bottom: 1px solid #eee;
     padding: 15px;
     border-radius: 10px 10px 0 0;
+    transition: background-color 0.3s ease; /* Smooth color change */
+  }
+
+  .card-header:hover {
+    background-color: #f1f1f1; /* Slight darken effect on hover */
   }
 
   .card-body {
@@ -35,15 +78,54 @@
     font-weight: 600;
   }
 
+  .form-control {
+    transition: all 0.3s ease; /* Smooth transition for form inputs */
+    opacity: 0;
+    animation: formInputAnimation 1.5s ease forwards; /* Slightly slower fade-in animation for form inputs */
+  }
+
+  /* Fade-in effect for form inputs */
+  @keyframes formInputAnimation {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .form-control:focus {
+    border-color: #89CFF0; /* Light blue focus border */
+    box-shadow: 0 0 5px rgba(137, 207, 240, 0.7); /* Subtle glow effect */
+  }
+
+  /* Button Styling */
   .btn-success {
     background-color: #89CFF0; /* Light blue color */
     color: #fff; /* White text color for contrast */
     border: none;
+    padding: 10px 40px;
+    margin: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease; /* Smooth button animation */
+    transform: scale(1); /* Starting size */
   }
 
   .btn-success:hover {
     background-color: #6EB5E4; /* Slightly darker shade on hover */
+    transform: scale(1.1); /* Slight zoom effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   }
+
+  .btn-success:active {
+    transform: scale(0.95); /* Button shrink on click */
+  }
+
+  /* Input field hover effect */
+  .form-control:hover {
+    border-color: #6EB5E4; /* Highlight border on hover */
+  }
+
 </style>
 
 <div class="container mt-4">
@@ -75,4 +157,6 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
+

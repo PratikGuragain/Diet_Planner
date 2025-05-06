@@ -38,25 +38,30 @@
       position: relative;
     }
 
-    header img.left-plane {
-      position: absolute;
-      top: 50%;
-      left: 20px;
-      transform: translateY(-50%);
-      width: 100px;
+    /* Animation for the plane image */
+    @keyframes flyLeftToRight {
+      0% {
+        left: -150px; /* Starts from left outside */
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      100% {
+        left: 100%; /* Moves to right outside */
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
 
-    header img.right-plane {
+    header img.plane {
       position: absolute;
       top: 50%;
-      right: 20px;
       transform: translateY(-50%);
       width: 100px;
+      animation: flyLeftToRight 10s infinite linear; /* 10s duration for a full cycle */
     }
 
     nav {
       background-color: #8ab4f8;
-      /* Softer, muted blue */
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 20px;
@@ -73,7 +78,6 @@
 
     nav a:hover {
       background-color: #6a96e8;
-      /* Slightly darker on hover */
     }
 
     h1,
@@ -127,14 +131,6 @@
       transform: translateY(-5px);
     }
 
-    .food-item h2 {
-      margin-bottom: 10px;
-    }
-
-    .food-item img {
-      max-width: 100%;
-    }
-
     footer {
       text-align: center;
       padding: 20px;
@@ -154,12 +150,10 @@
       display: inline-block;
     }
 
-    /* Updated button colors */
     .btn-primary,
     .btn-secondary,
     .dropdown-toggle {
       background-color: #8ab4f8;
-      /* Softer blue */
       border: none;
       border-radius: 5px;
       padding: 10px 20px;
@@ -171,7 +165,6 @@
     .btn-secondary:hover,
     .dropdown-toggle:hover {
       background-color: #6a96e8;
-      /* Darker on hover */
     }
   </style>
 </head>
@@ -179,11 +172,8 @@
 <body>
   <div class="container">
     <header>
-      <img src="https://www.eatthismuch.com/_app/immutable/assets/plane.srfVEkqf.webp" alt="Airplane"
-        class="left-plane">
+      <img src="https://www.eatthismuch.com/_app/immutable/assets/plane.srfVEkqf.webp" alt="Airplane" class="plane">
       <h1>Food Tracker</h1>
-      <img src="https://www.eatthismuch.com/_app/immutable/assets/plane.srfVEkqf.webp" alt="Airplane"
-        class="right-plane">
     </header>
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
@@ -234,3 +224,5 @@
 </body>
 
 </html>
+
+

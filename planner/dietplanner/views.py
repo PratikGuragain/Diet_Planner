@@ -5,10 +5,41 @@ from django.core.mail import send_mail, BadHeaderError
 from django.db.models import F
 from django.utils import timezone
 from decimal import Decimal
+from planner.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 import re
+from twilio.rest import Client
+import requests
+
+TWILIO_ACCOUNT_SID = 'AC9a1ec0e1ceb7088ab9e4b938f4807585'
+TWILIO_AUTH_TOKEN = '8ed9810e87cf83ade5e214da3c4839a8'
+
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+try:
+    account = client.api.accounts(TWILIO_ACCOUNT_SID).fetch()
+    print(f"Authenticated as: {account.friendly_name}")
+except Exception as e:
+    print(f"Authentication failed: {e}")
+    
+def dish_of_the_day():
+    url = 'https://www.themealdb.com/api/json/v1/1/random.php'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        meal = data['meals'][0]
+        return {
+            'name': meal['strMeal'],
+            'category': meal['strCategory'],
+            'area': meal['strArea'],
+            'instructions': meal['strInstructions'],
+            'image': meal['strMealThumb'],
+            'youtube': meal['strYoutube'],
+        }
+    return None
 
 def home(request):
-    return render(request, 'home.html')
+    dish = dish_of_the_day()
+    return render(request, 'home.html', {'dish': dish})
 
 def food_overview(request):
     pending_foods = PendingFood.objects.all()
@@ -19,8 +50,10 @@ def food_overview(request):
         image = request.FILES.get('image')
         ready_time_str = request.POST.get('ready_time')
         ingredients_str = request.POST.get('ingredients')
+        user_whatsapp_number = request.POST.get('user_number')
 
         try:
+            # Convert time from string to Python time object
             ready_time_obj = datetime.strptime(ready_time_str, '%I:%M %p').time()
             food = Food.objects.create(name=name, calorie_count=calorie_count, image=image)
 
@@ -38,52 +71,50 @@ def food_overview(request):
                     if len(parts) > 1:
                         quantity_unit = parts[1].strip()
                         try:
-                        # Use regular expression to find numbers (including negative)
+                            # Use regex to extract number and unit
                             quantity_str = re.search(r'^-?\d+(\.\d+)?', quantity_unit).group(0)
                             quantity = float(quantity_str)
-                            # Extract the unit (alphabetic characters)
                             unit_str = ''.join(filter(str.isalpha, quantity_unit.replace(quantity_str, '')))
                             if unit_str:
                                 unit = unit_str
-                        except (ValueError, AttributeError):  # Handle cases where parsing fails
+                        except (ValueError, AttributeError):
                             quantity = 1.0
                             unit = 'grams'
+
+                    # Create ingredient record
                     ingredient = Ingredient.objects.create(food=food, name=ingredient_name, quantity=quantity, unit=unit)
 
-                    # Add or update inventory
+                    # Manage inventory
                     try:
                         inventory_item = Inventory.objects.get(ingredient__name=ingredient.name)
                         inventory_item.quantity += Decimal(ingredient.quantity)
                         inventory_item.save()
                     except Inventory.DoesNotExist:
-                        # Create new inventory item, if quantity < 0, set minimum_quantity to 1 to force reorder.
-                        if Decimal(ingredient.quantity) < 0:
-                            Inventory.objects.create(ingredient=ingredient, quantity=Decimal(ingredient.quantity), unit=ingredient.unit, minimum_quantity=1)
-                        else:
-                            Inventory.objects.create(ingredient=ingredient, quantity=Decimal(ingredient.quantity), unit=ingredient.unit, minimum_quantity=0)
+                        min_quantity = 1 if Decimal(ingredient.quantity) < 0 else 0
+                        Inventory.objects.create(ingredient=ingredient, quantity=Decimal(ingredient.quantity), unit=ingredient.unit, minimum_quantity=min_quantity)
 
-            # Send email to cook when pending food is added
+            # Send WhatsApp notification (if Twilio is configured)
             ingredients = Ingredient.objects.filter(food=food)
             ingredient_list = "\n".join([f"- {ing.name}: {ing.quantity} {ing.unit}" for ing in ingredients])
-            message = f"Please prepare {food.name} by {ready_time_obj.strftime('%I:%M %p')}.\nIngredients:\n{ingredient_list}"
-            try:
-                send_mail(
-                    'Cooking Instructions',
-                    message,
-                    'guragainpratik8@gmail.com',  # Replace with your actual "from" email
-                    ['guragainpratik0@gmail.com'],  # Replace with the cook's email
-                    fail_silently=False,
-                )
-            except BadHeaderError:
-                print("invalid header found.")
-            except OSError as e:
-                print(f"Error sending email: {e}")
-                # Optionally, display a message to the user
-                # messages.error(request, "Failed to send email. Please try again later.")
+            message_body = f"Please prepare {food.name} by {ready_time_obj.strftime('%I:%M %p')}.\nIngredients:\n{ingredient_list}"
+
+            if 'client' in globals():
+                try:
+                    message = client.messages.create(
+                        from_='whatsapp:+14155238886',
+                        body=message_body,
+                        to=f'whatsapp:+{user_whatsapp_number}'
+                    )
+                    print(f"WhatsApp message sent: {message.sid}")
+                except Exception as e:
+                    print(f"Error sending WhatsApp message: {e}")
+            else:
+                print("Twilio client is not configured. WhatsApp message was not sent.")
 
             return redirect('food_overview')
+
         except ValueError as e:
-            error_message = f"Invalid ready time or ingredient format. Please use HH:MM AM/PM and Ingredient:Quantity Unit. Error: {e}"
+            error_message = f"Invalid ready time or ingredient format. Error: {e}"
             return render(request, 'food_overview.html', {'pending_foods': pending_foods, 'error_message': error_message})
 
     return render(request, 'food_overview.html', {'pending_foods': pending_foods})

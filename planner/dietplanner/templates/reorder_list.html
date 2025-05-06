@@ -5,6 +5,7 @@
   body {
     background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: fadeInPage 1s ease-out; /* Page fade-in effect */
   }
 
   .container {
@@ -12,6 +13,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeInContainer 1s ease-out; /* Container fade-in effect */
   }
 
   .card {
@@ -24,6 +26,7 @@
     border-bottom: 1px solid #eee;
     padding: 15px;
     border-radius: 10px 10px 0 0;
+    animation: fadeInHeader 0.8s ease-out; /* Header fade-in effect */
   }
 
   .card-body {
@@ -38,6 +41,7 @@
     width: 100%;
     margin-bottom: 1rem;
     color: #212529;
+    animation: fadeInTable 1s ease-out; /* Table fade-in effect */
   }
 
   .table-striped tbody tr:nth-of-type(odd) {
@@ -47,6 +51,9 @@
   .table-hover tbody tr:hover {
     color: #212529;
     background-color: rgba(0, 0, 0, 0.075);
+    transform: scale(1.03); /* Slight scale-up on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow on hover */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
   }
 
   .table th,
@@ -74,16 +81,72 @@
     color: #333;
     font-weight: 700;
     margin-bottom: 20px;
+    animation: fadeInText 1s ease-out; /* Header fade-in effect */
   }
 
   .btn-outline-danger {
     border-color: #e74c3c;
     color: #e74c3c;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   }
 
   .btn-outline-danger:hover {
     background-color: #e74c3c;
     color: #fff;
+    transform: scale(1.05); /* Slightly scale up on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+  }
+
+  /* Animations */
+  @keyframes fadeInPage {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInContainer {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInHeader {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInTable {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInText {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 

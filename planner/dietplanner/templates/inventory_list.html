@@ -5,6 +5,7 @@
   body {
     background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: fadeInPage 1s ease-out; /* Fade-in effect for the page */
   }
 
   .container {
@@ -12,6 +13,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-out; /* Fade-in for the container */
   }
 
   .card {
@@ -24,6 +26,7 @@
     border-bottom: 1px solid #eee;
     padding: 15px;
     border-radius: 10px 10px 0 0;
+    animation: slideInHeader 0.8s ease-out; /* Slide-in header animation */
   }
 
   .card-body {
@@ -38,6 +41,7 @@
     width: 100%;
     margin-bottom: 1rem;
     color: #212529;
+    animation: slideInTable 1s ease-out; /* Slide-in effect for the table */
   }
 
   .table-striped tbody tr:nth-of-type(odd) {
@@ -47,6 +51,8 @@
   .table-hover tbody tr:hover {
     color: #212529;
     background-color: rgba(0, 0, 0, 0.075);
+    transform: scale(1.02); /* Slightly scale up the row on hover */
+    transition: transform 0.3s ease; /* Smooth scaling transition */
   }
 
   .table th,
@@ -54,6 +60,7 @@
     padding: 0.75rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
+    transition: background-color 0.3s ease;
   }
 
   .table thead th {
@@ -74,6 +81,69 @@
     color: #333;
     font-weight: 700;
     margin-bottom: 20px;
+    animation: fadeInText 1s ease-out; /* Fade-in effect for the header */
+  }
+
+  .btn {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: scale(1.05); /* Slightly enlarge the button */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+    background-color: #8ab4f8; /* Change background color on hover */
+  }
+
+  /* Animations */
+  @keyframes fadeInPage {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInHeader {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInTable {
+    0% {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInText {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
@@ -109,3 +179,5 @@
   </div>
 </div>
 {% endblock %}
+
+

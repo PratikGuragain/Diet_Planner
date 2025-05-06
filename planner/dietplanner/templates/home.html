@@ -8,8 +8,47 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
+    @keyframes fadeSlideIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
     body {
-      background-color: #F3E5AB; /* Vanilla color */
+      background-color: #F3E5AB;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .hero-section {
+      background-color: #F3E5AB;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    .hero-section h1,
+    .hero-section p,
+    .hero-section blockquote {
+      animation: fadeSlideIn 1s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    .dish-card {
+      animation: zoomIn 1s ease-out;
+    }
+
+    .container.mt-5 h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: bold;
+      animation: fadeInUp 1.2s ease;
     }
 
     .container.mt-5 .row {
@@ -22,6 +61,7 @@
     .container.mt-5 .col-md-6 {
       flex: 0 0 calc(33.333% - 20px);
       margin: 10px;
+      animation: fadeSlideIn 0.9s ease;
     }
 
     .container.mt-5 .col-md-6 {
@@ -35,56 +75,94 @@
       }
     }
 
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
     .card-body {
-      height: 150px; 
+      height: 150px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 15px; 
+      padding: 15px;
     }
 
     .card-body h4 {
-      font-size: 1.1rem; 
-      margin-bottom: 5px; 
+      font-size: 1.1rem;
+      margin-bottom: 5px;
     }
 
     .card-body p {
-      font-size: 0.9rem; 
+      font-size: 0.9rem;
     }
 
     .btn-lg {
-        padding: 12px 12px; /* Reduced padding */
-        font-size: 1rem; /* Reduced font size */
-        display: inline-block;
-      }
+      padding: 12px 12px;
+      font-size: 1rem;
+      display: inline-block;
+      border-radius: 25px;
+      transition: all 0.4s ease;
+      animation: zoomIn 1s ease;
+    }
 
     .btn-primary {
-      background-color: #89CFF0; /* Light blue color (same as Add Food) */
+      background-color: #89CFF0;
       color: #fff;
       border: none;
-      transition: background-color 0.3s ease;
     }
 
     .btn-primary:hover {
-      background-color: #6EB5E4; /* Slightly darker shade on hover */
+      background-color: #6EB5E4;
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
-    .hero-section {
-      background-color: #F3E5AB;
+    .btn-warning {
+      transition: all 0.3s ease;
+      border-radius: 20px;
+    }
+
+    .btn-warning:hover {
+      transform: scale(1.05);
+      background-color: #ffcc00;
     }
   </style>
 </head>
 <body>
 
-  <div class="hero-section" style="padding: 5rem 0; text-align: center;"> 
+  <div class="hero-section" style="padding: 5rem 0; text-align: center;">
     <div class="container">
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col-md-6">
           <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1rem;">Put your diet on autopilot.</h1>
           <p style="font-size: 1.25rem; margin-bottom: 2rem;">Food Tracker tracks personalized meal plans based on your food preferences, calorie intake, and schedule.</p>
+          <blockquote id="food-quote" style="font-size: 1.1rem; font-style: italic; color: #555;"></blockquote>
+
+          {% if dish %}
+          <div class="card mt-4 mx-auto dish-card" style="max-width: 700px; background-color: #fffbe6; border: 1px solid #e3dca6;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ dish.image }}" alt="{{ dish.name }}" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">🍽️ Dish of the Day: {{ dish.name }}</h5>
+                  <p class="card-text"><small class="text-muted">Category: {{ dish.category }} | Region: {{ dish.area }}</small></p>
+                  <p class="card-text">{{ dish.instructions|slice:":200" }}...</p>
+                  <a href="{{ dish.youtube }}" target="_blank" class="btn btn-sm btn-warning">Watch on YouTube</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
         </div>
         <div class="col-md-6">
-          <img src="https://www.eatthismuch.com/_app/immutable/assets/plane.srfVEkqf.webp" alt="Hero Illustration" class="img-fluid">
+          <img src="https://www.eatthismuch.com/_app/immutable/assets/plane.srfVEkqf.webp" alt="Hero Illustration" class="img-fluid" style="animation: zoomIn 1s ease;">
         </div>
       </div>
     </div>
@@ -98,44 +176,67 @@
           <div class="card-body">
             <h4 class="my-0 font-weight-normal">Food Overview</h4>
             <p class="card-text">View, add, and manage your pending and cooked food.</p>
-            <a href="{% url 'food_overview' %}" class="btn btn-lg btn-primary">View/Add Food</a> </div>
+            <a href="{% url 'food_overview' %}" class="btn btn-lg btn-primary">View/Add Food</a>
+          </div>
         </div>
       </div>
+
       <div class="col-md-4">
         <div class="card mb-4 box-shadow">
           <div class="card-body">
             <h4 class="my-0 font-weight-normal">Food List</h4>
             <p class="card-text">Explore our food list and add new items.</p>
-            <a href="{% url 'food_list' %}" class="btn btn-lg btn-primary">View/Add Food</a> </div>
+            <a href="{% url 'food_list' %}" class="btn btn-lg btn-primary">View/Add Food</a>
+          </div>
         </div>
       </div>
+
       <div class="col-md-4">
         <div class="card mb-4 box-shadow">
           <div class="card-body">
             <h4 class="my-0 font-weight-normal">Ingredients</h4>
             <p class="card-text">View and manage your ingredients.</p>
-            <a href="{% url 'ingredients_book' %}" class="btn btn-lg btn-primary">View Ingredients</a> </div>
+            <a href="{% url 'ingredients_book' %}" class="btn btn-lg btn-primary">View Ingredients</a>
+          </div>
         </div>
       </div>
+
       <div class="col-md-6">
         <div class="card mb-4 box-shadow">
           <div class="card-body">
             <h4 class="my-0 font-weight-normal">Inventory</h4>
             <p class="card-text">View and manage your inventory.</p>
-            <a href="{% url 'inventory_list' %}" class="btn btn-lg btn-primary">View Inventory</a> </div>
+            <a href="{% url 'inventory_list' %}" class="btn btn-lg btn-primary">View Inventory</a>
+          </div>
         </div>
       </div>
+
       <div class="col-md-6">
         <div class="card mb-4 box-shadow">
           <div class="card-body">
             <h4 class="my-0 font-weight-normal">Reorder</h4>
             <p class="card-text">Reorder ingredients for your inventory.</p>
-            <a href="{% url 'reorder_list' %}" class="btn btn-lg btn-primary">Reorder</a> </div>
+            <a href="{% url 'reorder_list' %}" class="btn btn-lg btn-primary">Reorder</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const quotes = [
+      "“One cannot think well, love well, sleep well, if one has not dined well.” – Virginia Woolf",
+      "“Tell me what you eat, and I will tell you what you are.” – Jean Anthelme Brillat-Savarin",
+      "“People who love to eat are always the best people.” – Julia Child",
+      "“There is no sincerer love than the love of food.” – George Bernard Shaw",
+      "“Food is symbolic of love when words are inadequate.” – Alan D. Wolfelt",
+      "“You don’t need a silver fork to eat good food.” – Paul Prudhomme"
+    ];
+    const quoteElement = document.getElementById("food-quote");
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    quoteElement.innerText = quotes[randomIndex];
+  </script>
 </body>
 </html>
+
+

@@ -5,6 +5,7 @@
   body {
     background: linear-gradient(135deg, #e0f7fa, #d1f2eb); /* Soft and vibrant background */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: fadeIn 1s ease-in-out; /* Add fade-in effect for body */
   }
 
   .container {
@@ -12,6 +13,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: slideIn 1s ease-in-out; /* Add slide-in effect for container */
   }
 
   .card {
@@ -24,6 +26,7 @@
     border-bottom: 1px solid #eee;
     padding: 15px;
     border-radius: 10px 10px 0 0;
+    animation: bounceIn 1s ease-in-out; /* Add bounce-in animation for card header */
   }
 
   .card-body {
@@ -36,16 +39,24 @@
     margin-bottom: 10px;
     border-radius: 8px;
     background-color: #fff;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth hover effect */
+    animation: fadeInUp 0.5s ease-in-out; /* Fade-in effect for each food item */
   }
 
   .food-item:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
 
   .food-item h2 {
     margin-bottom: 10px;
+    color: #333;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .food-item:hover h2 {
+    color: #8ab4f8; /* Change color of title on hover */
   }
 
   .ingredient-badge {
@@ -53,12 +64,77 @@
     margin-bottom: 5px;
     background-color: #8ab4f8; /* Softer blue for badges */
     color: white; /* White text for better contrast */
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease-in-out; /* Smooth color change */
+  }
+
+  .ingredient-badge:hover {
+    background-color: #6a96e8; /* Darker blue on hover */
   }
 
   h1 {
     color: #333;
     font-weight: 700;
     margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Button animation */
+  .btn {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: scale(1.1); /* Slightly enlarge the button */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Add shadow effect on hover */
+  }
+
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Slide-in animation */
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* Bounce-in animation */
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Fade-up animation for food items */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
